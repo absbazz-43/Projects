@@ -1,0 +1,38 @@
+---
+title: "math"
+author: "Bishal sarker"
+date: "2022-11-19"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Let A nd B are two teams. Last 5 matches for A is ={ W,W,W,W,L}.
+so robability of win is $P(W)=\frac{4}{5}$. The last 5 matches for B is ={ W,L,L,W,W}. So the win probability is $P(W)=\frac{3}{5}$.\
+Now A nd B takes each other 25 times and among them A wins 12 and B wins 11 times. So the prior win probability for A is $P_0(W)=\frac{12}{25}$ and B is $P_0(W)=\frac{11}{25}$. So now if A and B takes each other then the probability that A will win is ,
+
+$P(WIN) = prior * latest $
+
+$$
+P_A{W}=\frac{4}{5} * \frac{12}{25} \\
+= .384
+$$
+
+and win probability for B is ,
+$$
+P_A{W}=\frac{3}{5} * \frac{1}{25} \\
+= .264
+$$
+
+now standarized the probability that A and B will win the game ,
+
+\begin{align*}
+ P(A) = \frac{.384}{.384+.264}\\
+=.6\\
+P(B)= \frac{..264}{.384+.264}\\
+=.4
+\end{align*}
+So the probability that A will win is 60% and  \
+B will win  is 40%. 

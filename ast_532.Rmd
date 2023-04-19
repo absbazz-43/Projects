@@ -1,0 +1,185 @@
+---
+title: "AST_531"
+author: "Bishal sarker"
+date: "2022-11-20"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r eval=FALSE}
+
+//lec - 01 
+
+//long-->wide
+
+//jegula over th time change hoy jeshob variable, ogula wide form ee ashbe.
+
+bysort id : gen time_f1= _n 
+
+reshape wide age weight brthwt, i(id) j(time_f1)
+
+
+corr
+
+pwcorr //flexibility beshi
+
+pwcorr weight1 weight2 weight3 weight4 weight5
+
+pwcorr weight* //3 ar 5 corr 1 
+//limitation : unbalanced data, sample shobar na so sample size kom onek gular jonno.
+//expect korechilam with time corr kombe but ta hoy nai.
+
+pwcorr weight*, star(0.05)
+
+use "C:\Users\training.DESKTOP-R24PH8H\Downloads\childweight.dta" , clear //longformat pailam abar
+
+bysort id : gen time_f1=_n 
+
+graph bar weight, over(id)
+
+graph bar (median) weight, over(id) //lagbe na, just chaile emne median gr kora jay dekhlam
+
+
+graph bar weight, over(time_f1)
+
+scatter weight age
+
+scatter weight brthwt //expected jehutu ekta time inv ekta time variant
+
+use "C:\Users\training.DESKTOP-R24PH8H\Downloads\jsp.dta", clear //eta real clustr data
+
+//ei data bhul ase
+
+ use "C:\Users\training.DESKTOP-R24PH8H\Downloads\jsp_728.dta" , clear
+ 
+ egen mn_math_yr3 = mean(math_yr3), by(school_id)
+ 
+ egen sd_math_yr3 = sd(math_yr3), by(school_id)
+ 
+ egen n = count(math_yr3), by( school_id)
+ 
+ gen se = sd_math_yr3/ sqrt(n)
+ 
+ serrbar mn_math_yr3 se school_id
+ 
+ sort mn_math_yr3
+ 
+ gen rank_school = _n
+ 
+ bysort school_id : drop if _n>1
+ 
+ sort mn_math_yr3
+ 
+ drop rank_school
+  
+ gen rank_school = _n
+  
+ serrbar mn_math_yr3 se rank_school,  addplot(scatter    mn_math_yr3 rank_school, mlabel(school_id))
+   
+ //lec - 02
+ 
+ tab school_id //no. of school 5 ta
+ 
+ //junior school research program jsp
+ 
+ //school gula treatment, school gula edu quality increase korte pare naki dekhte chai naki student ee bhalo ejnno institute ta bhalo dekhte chai.
+ // baseline ache school er --> mathyr1 , reading ability etc (ekta  common ques er under ee exam nea hoise erpor).
+ // gender background characteristic. pore follow up er jnno change hocche naki dekhte mathyr3. so baseline niye dekhsi over the time chage hoise kina.
+ *student  randomly assign korse, then baseline nise erpor follow up korse.
+ * Then at the end oi school gula ranking korse, last class ee ja korsi.
+ *last class ee ja korsi crude estimate chilo, gender er jnno adjust korsilam na.
+ 
+ *ekhon is it okay? mane adjust na kore ja korsi ta thik ase naki? --> na. hence, model korte hobe.
+ 
+*ekhon ekhane ekta clustering effect ache --> school adminstration.
+
+
+// amader analysis model based hotey hobe.
+
+use "C:\Users\training.DESKTOP-R24PH8H\Downloads\jsp_728.dta" , clear
+
+xtmixed math_yr3 math_yr1 gender__boy_1 social_class_ses__manual_1 || school_id: 
+
+predict b, reffects level(school_id) 
+predict seb, reses level(school_id) 
+ 
+ 
+ predict yhat1, fitted level(school_id) 
+
+//hw rand predicted diye ar ager ranking gula eki naki dekha.
+ 
+ 
+ //lec - 03
+ 
+ xtmixed math_yr3 math_yr1 gender__boy_1 social_class_ses__manual_1 || school_id: //mle estimar=te
+estimate store m1
+ xtmixed math_yr3 math_yr1 gender__boy_1 social_class_ses__manual_1 || school_id: math_yr1
+estimate store m2
+ 
+lrtest m2 m1 //sig na random slope.
+
+xtmixed math_yr3 math_yr1 gender__boy_1 social_class_ses__manual_1 || school_id: , reml //reml estimation
+
+ //fixed effect (beta coeff) er jonno lrtest reml ee meaningless, random component er ta okay.
+ 
+ xtmixed math_yr3 math_yr1 gender__boy_1 social_class_ses__manual_1 || school_id: , vce(robust)
+ 
+ predict betax, xb //fixed effect part er prediction
+ 
+ hist betax  //normal howar kotha
+ 
+ predict xbu, fitted //b1i and b2i o predict kore sum kore mean dise.
+ 
+ predict b , reffects level(school_id)
+ predict seb, reses level(school_id) //robust er jnno eta ashbe na. ager model ta run diye erpor abar run dao.
+ 
+ // b ekta empirically estimated mean/median. so eta ke rank korle better hobe cause eta model based estimate.
+ // b posterior mean
+ 
+ bysort school_id: drop if _n>1
+ 
+ sort b
+ gen rank = _n
+ 
+ serrbar b seb rank //ucla library theke label kora shikho.
+ 
+ //addplot
+ 
+ //Lec - 04
+ 
+  use "C:\Users\training.DESKTOP-R24PH8H\Downloads\productivity.dta" 
+  
+tab state 
+* 48 ta state er over the time change ta kemon dekhbo.
+
+
+twoway (lfit gsp year if state==1)(lfit gsp year if state==2)(lfit gsp year if state==3)(lfit gsp year if state==4)(lfit gsp year if state==5)(lfit gsp year if state==6)(lfit gsp year if state==7)
+
+twoway (lfit gsp year), by(state) //eta diye compare kora jay na, so ager plot tai better
+
+
+twoway (line gsp year if state==1)(line gsp year if state==2)(line gsp year if state==3)(line gsp year if state==4)
+
+scatter gsp public
+
+scatter gsp public if year == 1970
+
+twoway (line gsp public if year==1970, sort)(line gsp public if year==1971, sort)(line gsp public if year==1972, sort)(line gsp public if year==1973, sort)
+
+twoway (line gsp public if state==1, sort)(line gsp public if state==2, sort)(line gsp public if state==3, sort)(line gsp public if state==4, sort)
+
+xtmixed gsp year || state: //state ke randome untercept dhortesi
+ xtmixed gsp year public || state: 
+// ekhon sd(public) = 0 almost, so kono interpretation pacchi nacause beta o onek choto.
+
+//gr ee dekhechilam non-linearity ache, hence ota add kore dekhi.
+
+gen public2 = public^2
+
+ xtmixed gsp year public public2 || state: 
+ //non-linearity significant
+ 
+```

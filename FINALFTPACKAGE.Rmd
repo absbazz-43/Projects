@@ -1,0 +1,125 @@
+---
+title: "finalfit tutorial"
+author: "Bishal sarker"
+date: "2022-12-05"
+output: 
+  pdf_document:
+    toc: True
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Finalfit
+
+## summary table
+
+```{r}
+library(finalfit)
+expa <- c("age", "age.factor","sex.factor","obstruct.factor")
+dependent <- "perfor.factor"
+colon_s %>% 
+  summary_factorlist(explanatory = expa, dependent = dependent) -> t
+
+## for mtcars
+res <- "am"
+
+predictor <- c("mpg","gear","disp")
+mtcars %>% 
+  summary_factorlist(explanatory = predictor, dependent = res)
+iris %>% 
+  summary_factorlist(explanatory  = c("Sepal.Length","Petal.Length"), dependent = "Species" )
+```
+```{r}
+res <- "am"
+
+predictor <- c("mpg","gear","disp")
+
+mtcars %>% 
+  mutate(mpg = ff_label(mpg,"MPG"))
+mtcars %>% 
+  summary_factorlist(explanatory = predictor, dependent = res)
+```
+## P value for hypothesis test
+```{r}
+res <- "am"
+
+predictor <- c("mpg","gear","disp")
+mtcars %>% 
+  summary_factorlist(explanatory = predictor, dependent = res,p = TRUE)
+```
+## With Fisher's Exact test 
+
+```{r}
+library(finalfit)
+expa <- c("age", "age.factor","sex.factor","obstruct.factor")
+dependent <- "perfor.factor"
+colon_s %>% 
+  summary_factorlist(explanatory = expa, dependent = dependent, p_cat = "fisher", p = TRUE)
+?summary_factorlist
+```
+## With Chi square value
+
+```{r}
+library(finalfit)
+expa <- c("age", "age.factor","sex.factor","obstruct.factor")
+dependent <- "perfor.factor"
+colon_s %>% 
+  summary_factorlist(explanatory = expa, dependent = dependent, p = TRUE, p_cat = "chisq")
+```
+## Parametric explanatory variables
+
+```{r}
+expa <- c("age", "age.factor","sex.factor","obstruct.factor")
+dependent <- "perfor.factor"
+colon_s %>% 
+  summary_factorlist(explanatory = expa, dependent = dependent, p = TRUE, p_cont_para ="t.test")
+```
+
+## NOn parametric explanatory variables
+
+```{r}
+
+expa <- c("age", "age.factor","sex.factor","obstruct.factor")
+dependent <- "perfor.factor"
+colon_s %>% 
+  summary_factorlist(explanatory = expa, dependent = dependent, p = TRUE, cont = "median")
+```
+## Missing values for the explanatory variables
+```{r}
+expa <- c("age", "age.factor","sex.factor","obstruct.factor")
+dependent <- "perfor.factor"
+colon_s %>% 
+  summary_factorlist(explanatory = expa, dependent = dependent, p =TRUE, na_include = TRUE)
+```
+
+## Pass missing values 
+
+```{r}
+expa <- c("age", "age.factor","sex.factor","obstruct.factor")
+dependent <- "perfor.factor"
+colon_s %>% 
+  summary_factorlist(explanatory = expa, dependent = dependent, p =TRUE, na_include = TRUE, na_to_p = TRUE)
+```
+## Row proportions
+```{r}
+expa <- c("age", "age.factor","sex.factor","obstruct.factor")
+dependent <- "perfor.factor"
+colon_s %>% 
+  summary_factorlist(explanatory = expa, dependent = dependent, p =TRUE, na_include = TRUE, column = FALSE)
+```
+
+
+
+# MODel building
+
+## By two variable
+
+```{r}
+ind <- "age.factor"
+dep <- "mort_5yr"
+colon_s %>% 
+  finalfit(dep, ind, add_dependent_label = FALSE)
+```
+

@@ -1,0 +1,41 @@
+---
+title: "problem solving"
+author: "Bishal sarker"
+date: "2022-11-26"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, comment = NA)
+```
+
+# Prime number within a range
+
+```{r}
+
+
+## All prime number within a range
+
+
+prim = function(num){
+  prime=c()
+  for (j in 2:num){
+    fac = c()
+    for (i in 1:(num)){
+      if(j %%i==0){
+        fac = append(fac,i)
+      }
+    }
+    if(length(fac)<3){
+      prime = append(prime,j)
+    }
+  }
+  return(prime)
+}
+
+
+prim(10)
+
+
+```
+
