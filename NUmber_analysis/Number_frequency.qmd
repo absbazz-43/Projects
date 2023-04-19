@@ -1,0 +1,36 @@
+---
+title: "Number Frequency Distribution"
+format: pdf
+editor: visual
+---
+
+# Frequency distribution of Irrational number square root 
+
+```{python}
+import decimal
+from collections import Counter
+import matplotlib.pyplot as plt
+import seaborn as sns
+def Frequency(number, digits):
+    d2 = decimal.Decimal(number)
+    d = decimal.Context(prec = digits)
+    value = d2.sqrt(d)
+    div= str(value).split('.')
+    vad = div[1]
+    splt = [int(i) for i in str(vad)]
+    v = Counter(splt)
+    color = sns.color_palette("magma",len(v.keys()))
+    gr = plt.bar(v.keys(),v.values(), color = color)
+    plt.bar_label(gr, label = v.values(),label_type="center", rotation =   90)
+    plt.axhline(y = digits//10, color = "red")
+    plt.title("Frequncy barplot")
+    plt.xlabel("Digits")
+    plt.ylabel("Count")
+    plt.xticks([0,1,2,3,4,5,6,7,8,9])
+    plt.show()
+```
+
+```{python}
+Frequency(2,10000)
+```
+

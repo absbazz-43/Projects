@@ -1,0 +1,73 @@
+---
+title: "Untitled"
+format: pdf
+editor: visual
+---
+
+# Frequency distribution of digits of square root of irrational number
+
+
+
+
+    ```{python, echo = FALSE}
+    import decimal
+    from collections import Counter
+    import matplotlib.pyplot as plt
+    import seaborn as sns
+    def Frequency(number, digits):
+        d2 = decimal.Decimal(number)
+        d = decimal.Context(prec = digits)
+        value = d2.sqrt(d)
+        div= str(value).split('.')
+        vad = div[1]
+        splt = [int(i) for i in str(vad)]
+        v = Counter(splt)
+        color = sns.color_palette("magma",len(v.keys()))
+        gr = plt.bar(v.keys(),v.values(), color = color)
+        plt.bar_label(gr, label = v.values(),label_type="center", rotation =   90)
+        plt.axhline(y = digits//10, color = "red")
+        plt.title("Frequncy barplot")
+        plt.xlabel("Digits")
+        plt.ylabel("Count")
+        plt.xticks([0,1,2,3,4,5,6,7,8,9])
+        plt.show()
+
+
+    ```
+
+
+## Frequency distribution for $\sqrt{2}$.
+
+```{python}
+Frequency(2,100000)
+```
+
+## Frequency distribution of $\sqrt{3}$
+
+```{python}
+Frequency(3,100000)
+```
+
+## Frequency distribution of $\sqrt{5}$ 
+
+```{python}
+Frequency(5,100000)
+```
+
+## Frequency distribution of $\sqrt{7}$  
+
+```{python}
+Frequency(7,100000)
+```
+
+## Frequency distribution of $\sqrt{11}$  
+
+```{python}
+Frequency(11,100000)
+```
+
+## Frequency distribution of $\sqrt{5}$  
+
+```{python}
+Frequency(13,100000)
+```

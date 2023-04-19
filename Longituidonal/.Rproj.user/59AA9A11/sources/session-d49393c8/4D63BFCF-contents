@@ -1,0 +1,34 @@
+### extract montgh and date from date 
+d = Sys.time()
+dat = format(as.Date(d, format = "%y-%d-%m"),"%d")
+dat
+
+
+## import covid data oif bd
+
+data <- read.csv(file.choose())
+data
+library(geepack)
+dim(data)
+colnames(data)
+data$Date= format(as.Date(data$Date, format = "%m/%d/%y"),"%d")
+data$Date
+
+#####  
+
+
+data  = data.frame(Id = 1:10,y = sample(0:1,10,replace = T),A=sample(0:1,10,replace = T))
+data
+da=data
+dv = data %>% 
+  mutate(A=ifelse(A==1,0,1))
+library(tidyverse)
+
+m = glm(y ~ A,data =data,family = binomial(link = "logit"))
+
+library(broom)  
+d =augment(m,newdata = dv[,-2]) %>% 
+  rename(y =.fitted) %>% 
+  relocate(y,.after = Id )
+d
+f =rbind(da,d)
